@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Papa from "papaparse";
 import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LabelList
 } from "recharts";
 
 export default function AgentChartsUploader() {
@@ -16,7 +16,7 @@ export default function AgentChartsUploader() {
       header: false,
       skipEmptyLines: true,
       complete: ({ data }) => {
-        const rawData = data.slice(2); // Skip headers + 1
+        const rawData = data.slice(2);
         const calls = [];
         const percents = [];
 
@@ -31,7 +31,6 @@ export default function AgentChartsUploader() {
           percents.push({ Agent: agent, PercentageAvailable: percentage });
         });
 
-        // Sort
         calls.sort((a, b) => b.OutboundCalls - a.OutboundCalls);
         percents.sort((a, b) => b.PercentageAvailable - a.PercentageAvailable);
 
@@ -72,7 +71,9 @@ export default function AgentChartsUploader() {
                 <XAxis dataKey="Agent" angle={-45} textAnchor="end" interval={0} height={120} />
                 <YAxis />
                 <Tooltip />
-                <Bar dataKey="OutboundCalls" fill="#6366f1" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="OutboundCalls" fill="#6366f1" radius={[4, 4, 0, 0]}>
+                  <LabelList dataKey="OutboundCalls" position="top" />
+                </Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -89,7 +90,13 @@ export default function AgentChartsUploader() {
                 <XAxis dataKey="Agent" angle={-45} textAnchor="end" interval={0} height={120} />
                 <YAxis />
                 <Tooltip formatter={(value) => `${value.toFixed(2)}%`} />
-                <Bar dataKey="PercentageAvailable" fill="#10b981" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="PercentageAvailable" fill="#10b981" radius={[4, 4, 0, 0]}>
+                  <LabelList
+                    dataKey="PercentageAvailable"
+                    position="top"
+                    formatter={(val) => `${val.toFixed(1)}%`}
+                  />
+                </Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>
