@@ -1,70 +1,47 @@
-# Getting Started with Create React App
+# 📊 Agent Analytics Dashboard
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+An interactive, modern React application for visualizing **agent performance metrics** from a CSV file.
 
-## Available Scripts
+This dashboard provides dynamic histograms and intelligent filtering for KPIs such as:
+- 🔊 Number of Outbound Calls
+- 📵 Number of No Answers
+- 🕒 Percentage Available
 
-In the project directory, you can run:
+Also includes:
+- 🚨 At-risk agent identification
+- 📈 Top/bottom performance metrics
 
-### `npm start`
+---
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## 🚀 Features
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- 📤 Upload CSV file (no backend needed)
+- 📊 Recharts-based histograms for each agent metric
+- 🧠 Highlighted "At-Risk Agents" (bottom 50% in calls & availability, top 50% in no answers)
+- 📱 Mobile-responsive layout
+- ⚡ Instant insights after upload
 
-### `npm test`
+---
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 📁 CSV Format Required
 
-### `npm run build`
+Your uploaded CSV should contain the following columns (column names can be fuzzy, as long as positionally correct):
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+| Column | Description |
+|--------|-------------|
+| Column B | `Agent Name` |
+| Column D | `Sum of Outbound Calls` |
+| Column E | `Sum of No Answers` |
+| Column I | `Percentage Available` (as % string, e.g. `34.56%`) |
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+> ⚠️ CSV header must be in row 2, i.e. skip the first row when parsing.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+---
 
-### `npm run eject`
+## 🖥️ Usage
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### 🧪 Local Development
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```bash
+npm install
+npm start
