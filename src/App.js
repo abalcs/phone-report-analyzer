@@ -40,6 +40,88 @@ export default function AgentChartsUploader() {
     });
   };
 
+  function getTopPercentile(data, key, percent = 0.5) {
+    const count = Math.ceil(data.length * percent);
+    return new Set(
+      [...data]
+        .sort((a, b) => b[key] - a[key])
+        .slice(0, count)
+        .map((item) => item.Agent)
+    );
+  }
+  
+  function getBottomPercentile(data, key, percent = 0.5) {
+    const count = Math.ceil(data.length * percent);
+    return new Set(
+      [...data]
+        .sort((a, b) => a[key] - b[key])
+        .slice(0, count)
+        .map((item) => item.Agent)
+    );
+  }
+  
+  function renderEliteAgentList(agents) {
+    return (
+      <div className="card" style={{ padding: "1rem", fontSize: "0.95rem" }}>
+        <h3 className="subtitle" style={{ textAlign: 'left', color: '#2563eb' }}>
+          🌟 Elite Agents (Top 50% Calls & Availability, Bottom 50% No Answers)
+        </h3>
+        {agents.length > 0 ? (
+          <ul style={{ paddingLeft: "1.2rem", color: "#333" }}>
+            {agents.map((agent, i) => (
+              <li key={i}>
+                {agent.Agent} — 📞 Outbound Calls {agent.OutboundCalls}, 📵 RONA's {agent.NoAnswers}, 🕒 Availability {agent.PercentageAvailable.toFixed(2)}%
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>No agents matched all criteria.</p>
+        )}
+      </div>
+    );
+  }  
+
+  function getBottomHalf(data, key) {
+    const count = Math.floor(data.length / 2);
+    return new Set(
+      [...data]
+        .sort((a, b) => a[key] - b[key])
+        .slice(0, count)
+        .map((item) => item.Agent)
+    );
+  }
+  
+  function getTopHalf(data, key) {
+    const count = Math.ceil(data.length / 2);
+    return new Set(
+      [...data]
+        .sort((a, b) => b[key] - a[key])
+        .slice(0, count)
+        .map((item) => item.Agent)
+    );
+  }
+
+  function renderLowAgentList(agents) {
+    return (
+      <div className="card" style={{ padding: "1rem", fontSize: "0.95rem" }}>
+        <h3 className="subtitle" style={{ textAlign: 'left', color: '#b91c1c' }}>
+          🚨 At-Risk Agents (Bottom 50% Calls & Availability, Top 50% No Answers)
+        </h3>
+        {agents.length > 0 ? (
+          <ul style={{ paddingLeft: "1.2rem", color: "#333" }}>
+            {agents.map((agent, i) => (
+              <li key={i}>
+                {agent.Agent} — 📞 Outbound Calls {agent.OutboundCalls}, 📵 RONA's {agent.NoAnswers}, 🕒 Availability {agent.PercentageAvailable.toFixed(2)}%
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>No agents matched all criteria.</p>
+        )}
+      </div>
+    );
+  }  
+
   return (
     <div className="container">
       <div className="card">
@@ -105,6 +187,54 @@ export default function AgentChartsUploader() {
           </ResponsiveContainer>
         </div>
       )}
+
+      {callsData.length > 0 && noAnswerData.length > 0 && percentData.length > 0 && (() => {
+        const topCalls = getTopPercentile(callsData, "OutboundCalls");
+        const topAvailability = getTopPercentile(percentData, "PercentageAvailable");
+        const bottomNoAnswers = getBottomPercentile(noAnswerData, "NoAnswers");
+      
+        // Intersect all three sets
+        const eliteAgents = callsData.filter(agent =>
+          topCalls.has(agent.Agent) &&
+          topAvailability.has(agent.Agent) &&
+          bottomNoAnswers.has(agent.Agent)
+        ).map(agent => {
+          const noAns = noAnswerData.find(a => a.Agent === agent.Agent);
+          const avail = percentData.find(a => a.Agent === agent.Agent);
+          return {
+            Agent: agent.Agent,
+            OutboundCalls: agent.OutboundCalls,
+            NoAnswers: noAns?.NoAnswers ?? 0,
+            PercentageAvailable: avail?.PercentageAvailable ?? 0,
+          };
+        });
+      
+        return renderEliteAgentList(eliteAgents);
+      })()}
+
+      {callsData.length > 0 && noAnswerData.length > 0 && percentData.length > 0 && (() => {
+        const bottomCalls = getBottomHalf(callsData, "OutboundCalls");
+        const bottomAvailability = getBottomHalf(percentData, "PercentageAvailable");
+        const topNoAnswers = getTopHalf(noAnswerData, "NoAnswers");
+      
+        const lowAgents = callsData.filter(agent =>
+          bottomCalls.has(agent.Agent) &&
+          bottomAvailability.has(agent.Agent) &&
+          topNoAnswers.has(agent.Agent)
+        ).map(agent => {
+          const noAns = noAnswerData.find(a => a.Agent === agent.Agent);
+          const avail = percentData.find(a => a.Agent === agent.Agent);
+          return {
+            Agent: agent.Agent,
+            OutboundCalls: agent.OutboundCalls,
+            NoAnswers: noAns?.NoAnswers ?? 0,
+            PercentageAvailable: avail?.PercentageAvailable ?? 0,
+          };
+        });
+      
+        return renderLowAgentList(lowAgents);
+      })()}      
+
     </div>
   );
 }

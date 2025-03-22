@@ -62,3 +62,7 @@ input[type='file'] {
 input[type='file']:hover {
   background: #e0e7ff;
 }
+
+ul li {
+  margin-bottom: 4px;
+}
