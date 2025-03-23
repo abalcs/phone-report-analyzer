@@ -135,20 +135,20 @@ table tr:hover td {
 }
 
 /* Dark Mode Enhancements */
+.light-mode {
+  background: #ffffff;
+  color: #1f2937;
+}
+
 .dark-mode {
-  background: linear-gradient(to top right, #1e293b, #0f172a);
+  background: #0f172a;
   color: #f8fafc;
 }
 
 .dark-mode .card {
-  background-color: #1f2937;
-  border: 1px solid #334155;
-  color: #f1f5f9;
-}
-
-.dark-mode .title,
-.dark-mode .subtitle {
-  color: #facc15;
+  background-color: #1e293b;
+  border-color: #334155;
+  color: #e2e8f0;
 }
 
 .dark-mode input[type='file'] {
@@ -159,16 +159,4 @@ table tr:hover td {
 
 .dark-mode input[type='file']:hover {
   background: #1e293b;
-}
-
-.dark-mode table {
-  background: #1e293b;
-}
-
-.dark-mode table thead {
-  background: #334155;
-}
-
-.dark-mode table tr:hover td {
-  background-color: #475569;
 }

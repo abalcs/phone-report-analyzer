@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import Papa from "papaparse";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LabelList
@@ -6,10 +6,20 @@ import {
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 
+
 export default function AgentChartsUploader() {
   const [callsData, setCallsData] = useState([]);
   const [percentData, setPercentData] = useState([]);
   const [noAnswerData, setNoAnswerData] = useState([]);
+
+  const [darkMode, setDarkMode] = useState(false);
+  const toggleDarkMode = () => {
+  setDarkMode((prev) => !prev);
+  };
+
+  useEffect(() => {
+    document.body.className = darkMode ? 'dark-mode' : 'light-mode';
+  }, [darkMode]);
 
   const exportToPDF = () => {
     const input = document.body; // or use a specific wrapper div
@@ -164,135 +174,150 @@ export default function AgentChartsUploader() {
   };  
 
   return (
-    <div className="container">
-      <div className="card">
-        <h1 className="title">📊 Phone Report Analytics Dashboard</h1>
-        <p className="subtitle">Upload a CSV file to visualize agent performance statistics.</p>
-        <div className="upload-input">
-          <input type="file" accept=".csv" onChange={handleUpload} />
-        </div>
-        <div className="PDFexport">
-          <button
-            onClick={exportToPDF}
-            style={{
-              padding: "0.5rem 1rem",
-              borderRadius: "6px",
-              marginLeft: "1rem",
-              background: "#2563eb",
-              color: "#fff",
-              border: "none",
-              cursor: "pointer"
-            }}
-          >
-            📄 Export PDF
-          </button>
-        </div>
-      </div>
-
-      {renderAgentAverages()}
-
-      {callsData.length > 0 && (
+      <div className="container">
         <div className="card">
-          <h2 className="subtitle">🔊 Outbound Calls by Agent</h2>
-          <ResponsiveContainer width="100%" height={400}>
-            <BarChart data={callsData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="Agent" angle={-45} textAnchor="end" interval={0} height={120} />
-              <YAxis />
-              <Tooltip />
-              <Bar dataKey="OutboundCalls" fill="#6366f1">
-                <LabelList dataKey="OutboundCalls" position="top" />
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
+        <button
+              onClick={toggleDarkMode}
+              style={{
+                padding: "10px 16px",
+                borderRadius: "8px",
+                marginBottom: "1rem",
+                backgroundColor: darkMode ? "#1f2937" : "#f3f4f6",
+                color: darkMode ? "#f9fafb" : "#1f2937",
+                border: "1px solid #ccc",
+                cursor: "pointer",
+                fontWeight: 600
+              }}
+            >
+              {darkMode ? "🌞 Light Mode" : "🌙 Dark Mode"}
+            </button>
+          <h1 className="title">📊 Phone Report Analytics Dashboard</h1>
+          <p className="subtitle">Upload a CSV file to visualize agent performance statistics.</p>
+          <div className="upload-input">
+            <input type="file" accept=".csv" onChange={handleUpload} />
+          </div>
+          <div className="PDFexport">
+            <button
+              onClick={exportToPDF}
+              style={{
+                padding: "0.5rem 1rem",
+                borderRadius: "6px",
+                marginLeft: "1rem",
+                background: "#2563eb",
+                color: "#fff",
+                border: "none",
+                cursor: "pointer"
+              }}
+            >
+              📄 Export PDF
+            </button>
+          </div>
         </div>
-      )}
 
-      {noAnswerData.length > 0 && (
-        <div className="card">
-          <h2 className="subtitle">📵 No Answers by Agent</h2>
-          <ResponsiveContainer width="100%" height={400}>
-            <BarChart data={noAnswerData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="Agent" angle={-45} textAnchor="end" interval={0} height={120} />
-              <YAxis />
-              <Tooltip />
-              <Bar dataKey="NoAnswers" fill="#f97316">
-                <LabelList dataKey="NoAnswers" position="top" />
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      )}
+        {renderAgentAverages()}
 
-      {percentData.length > 0 && (
-        <div className="card">
-          <h2 className="subtitle">🕒 Percentage Available by Agent</h2>
-          <ResponsiveContainer width="100%" height={400}>
-            <BarChart data={percentData} barCategoryGap="2%">
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="Agent" angle={-45} textAnchor="end" interval={0} height={120} />
-              <YAxis />
-              <Tooltip formatter={(value) => `${value.toFixed(2)}%`} />
-              <Bar dataKey="PercentageAvailable" fill="#10b981">
-              <LabelList
-              dataKey="PercentageAvailable"
-              position="top"
-              formatter={(v) => `${v.toFixed(1)}%`}
-              style={{ fontSize: 10, fill: '#555' }}
-            />
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      )}
+        {callsData.length > 0 && (
+          <div className="card">
+            <h2 className="subtitle">🔊 Outbound Calls by Agent</h2>
+            <ResponsiveContainer width="100%" height={400}>
+              <BarChart data={callsData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="Agent" angle={-45} textAnchor="end" interval={0} height={120} />
+                <YAxis />
+                <Tooltip />
+                <Bar dataKey="OutboundCalls" fill="#6366f1">
+                  <LabelList dataKey="OutboundCalls" position="top" />
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        )}
 
-      {callsData.length > 0 && noAnswerData.length > 0 && percentData.length > 0 && (() => {
-        const topCalls = getTopPercentile(callsData, "OutboundCalls");
-        const topAvailability = getTopPercentile(percentData, "PercentageAvailable");
-        const bottomNoAnswers = getBottomPercentile(noAnswerData, "NoAnswers");
-      
-        // Intersect all three sets
-        const eliteAgents = callsData.filter(agent =>
-          topCalls.has(agent.Agent) &&
-          topAvailability.has(agent.Agent) &&
-          bottomNoAnswers.has(agent.Agent)
-        ).map(agent => {
-          const noAns = noAnswerData.find(a => a.Agent === agent.Agent);
-          const avail = percentData.find(a => a.Agent === agent.Agent);
-          return {
-            Agent: agent.Agent,
-            OutboundCalls: agent.OutboundCalls,
-            NoAnswers: noAns?.NoAnswers ?? 0,
-            PercentageAvailable: avail?.PercentageAvailable ?? 0,
-          };
-        });
-      
-        return renderEliteAgentList(eliteAgents);
-      })()}
+        {noAnswerData.length > 0 && (
+          <div className="card">
+            <h2 className="subtitle">📵 No Answers by Agent</h2>
+            <ResponsiveContainer width="100%" height={400}>
+              <BarChart data={noAnswerData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="Agent" angle={-45} textAnchor="end" interval={0} height={120} />
+                <YAxis />
+                <Tooltip />
+                <Bar dataKey="NoAnswers" fill="#f97316">
+                  <LabelList dataKey="NoAnswers" position="top" />
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        )}
 
-      {callsData.length > 0 && noAnswerData.length > 0 && percentData.length > 0 && (() => {
-        const bottomCalls = getBottomHalf(callsData, "OutboundCalls");
-        const bottomAvailability = getBottomHalf(percentData, "PercentageAvailable");
-        const topNoAnswers = getTopHalf(noAnswerData, "NoAnswers");
-      
-        const lowAgents = callsData.filter(agent =>
-          bottomCalls.has(agent.Agent) &&
-          bottomAvailability.has(agent.Agent) &&
-          topNoAnswers.has(agent.Agent)
-        ).map(agent => {
-          const noAns = noAnswerData.find(a => a.Agent === agent.Agent);
-          const avail = percentData.find(a => a.Agent === agent.Agent);
-          return {
-            Agent: agent.Agent,
-            OutboundCalls: agent.OutboundCalls,
-            NoAnswers: noAns?.NoAnswers ?? 0,
-            PercentageAvailable: avail?.PercentageAvailable ?? 0,
-          };
-        });
-      
-        return renderLowAgentList(lowAgents);
-      })()}      
-    </div>
+        {percentData.length > 0 && (
+          <div className="card">
+            <h2 className="subtitle">🕒 Percentage Available by Agent</h2>
+            <ResponsiveContainer width="100%" height={400}>
+              <BarChart data={percentData} barCategoryGap="2%">
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="Agent" angle={-45} textAnchor="end" interval={0} height={120} />
+                <YAxis />
+                <Tooltip formatter={(value) => `${value.toFixed(2)}%`} />
+                <Bar dataKey="PercentageAvailable" fill="#10b981">
+                <LabelList
+                dataKey="PercentageAvailable"
+                position="top"
+                formatter={(v) => `${v.toFixed(1)}%`}
+                style={{ fontSize: 10, fill: '#555' }}
+              />
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        )}
+
+        {callsData.length > 0 && noAnswerData.length > 0 && percentData.length > 0 && (() => {
+          const topCalls = getTopPercentile(callsData, "OutboundCalls");
+          const topAvailability = getTopPercentile(percentData, "PercentageAvailable");
+          const bottomNoAnswers = getBottomPercentile(noAnswerData, "NoAnswers");
+        
+          // Intersect all three sets
+          const eliteAgents = callsData.filter(agent =>
+            topCalls.has(agent.Agent) &&
+            topAvailability.has(agent.Agent) &&
+            bottomNoAnswers.has(agent.Agent)
+          ).map(agent => {
+            const noAns = noAnswerData.find(a => a.Agent === agent.Agent);
+            const avail = percentData.find(a => a.Agent === agent.Agent);
+            return {
+              Agent: agent.Agent,
+              OutboundCalls: agent.OutboundCalls,
+              NoAnswers: noAns?.NoAnswers ?? 0,
+              PercentageAvailable: avail?.PercentageAvailable ?? 0,
+            };
+          });
+        
+          return renderEliteAgentList(eliteAgents);
+        })()}
+
+        {callsData.length > 0 && noAnswerData.length > 0 && percentData.length > 0 && (() => {
+          const bottomCalls = getBottomHalf(callsData, "OutboundCalls");
+          const bottomAvailability = getBottomHalf(percentData, "PercentageAvailable");
+          const topNoAnswers = getTopHalf(noAnswerData, "NoAnswers");
+        
+          const lowAgents = callsData.filter(agent =>
+            bottomCalls.has(agent.Agent) &&
+            bottomAvailability.has(agent.Agent) &&
+            topNoAnswers.has(agent.Agent)
+          ).map(agent => {
+            const noAns = noAnswerData.find(a => a.Agent === agent.Agent);
+            const avail = percentData.find(a => a.Agent === agent.Agent);
+            return {
+              Agent: agent.Agent,
+              OutboundCalls: agent.OutboundCalls,
+              NoAnswers: noAns?.NoAnswers ?? 0,
+              PercentageAvailable: avail?.PercentageAvailable ?? 0,
+            };
+          });
+        
+          return renderLowAgentList(lowAgents);
+        })()}      
+      </div>  
   );
 }
