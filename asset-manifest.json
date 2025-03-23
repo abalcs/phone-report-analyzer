@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/phone-report-analyzer/static/css/main.aabef138.css",
-    "main.js": "/phone-report-analyzer/static/js/main.8a0263a5.js",
+    "main.css": "/phone-report-analyzer/static/css/main.84e73193.css",
+    "main.js": "/phone-report-analyzer/static/js/main.51caa270.js",
     "static/js/977.9c282d4b.chunk.js": "/phone-report-analyzer/static/js/977.9c282d4b.chunk.js",
     "static/js/732.07c5b80f.chunk.js": "/phone-report-analyzer/static/js/732.07c5b80f.chunk.js",
     "index.html": "/phone-report-analyzer/index.html",
-    "main.aabef138.css.map": "/phone-report-analyzer/static/css/main.aabef138.css.map",
-    "main.8a0263a5.js.map": "/phone-report-analyzer/static/js/main.8a0263a5.js.map",
+    "main.84e73193.css.map": "/phone-report-analyzer/static/css/main.84e73193.css.map",
+    "main.51caa270.js.map": "/phone-report-analyzer/static/js/main.51caa270.js.map",
     "732.07c5b80f.chunk.js.map": "/phone-report-analyzer/static/js/732.07c5b80f.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.aabef138.css",
-    "static/js/main.8a0263a5.js"
+    "static/css/main.84e73193.css",
+    "static/js/main.51caa270.js"
   ]
 }
