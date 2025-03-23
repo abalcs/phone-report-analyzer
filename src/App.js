@@ -12,10 +12,17 @@ export default function AgentChartsUploader() {
   const [percentData, setPercentData] = useState([]);
   const [noAnswerData, setNoAnswerData] = useState([]);
 
-  const [darkMode, setDarkMode] = useState(false);
-  const toggleDarkMode = () => {
-  setDarkMode((prev) => !prev);
-  };
+  const [darkMode, setDarkMode] = useState(() => {
+    const savedMode = localStorage.getItem("theme");
+    return savedMode === "dark";
+  });  
+
+  const toggleDarkMode = () => setDarkMode(prev => !prev);
+
+  useEffect(() => {
+    localStorage.setItem("theme", darkMode ? "dark" : "light");
+    document.body.className = darkMode ? 'dark-mode' : 'light-mode'; // for full page theming
+  }, [darkMode]);
 
   useEffect(() => {
     document.body.className = darkMode ? 'dark-mode' : 'light-mode';
