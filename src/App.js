@@ -1,3 +1,4 @@
+/* eslint-disable no-dupe-keys */
 import React, { useState,useEffect } from "react";
 import Papa from "papaparse";
 import {
@@ -39,6 +40,8 @@ export default function AgentChartsUploader() {
       pdf.save("agent-report.pdf");
     });
   };
+
+  const labelStyle = { fontSize: 10, fill: darkMode ? '#f1f5f9' : '#555' };
 
   const handleUpload = (e) => {
     const file = e.target.files[0];
@@ -93,8 +96,8 @@ export default function AgentChartsUploader() {
   
   function renderEliteAgentList(agents) {
     return (
-      <div className="card" style={{ padding: "1rem", fontSize: "0.95rem" }}>
-        <h3 className="subtitle" style={{ textAlign: 'left', color: '#2563eb' }}>
+      <div className="card" style={{ padding: "1rem", fontSize: "0.95rem", textAlign: 'center'}}>
+        <h3 className="subtitle" style={{ textAlign: 'left', color: '#2563eb', textAlign: 'center'}}>
           🌟 Elite Agents (Top 50% Calls & Availability, Bottom 50% No Answers)
         </h3>
         {agents.length > 0 ? (
@@ -135,11 +138,11 @@ export default function AgentChartsUploader() {
   function renderLowAgentList(agents) {
     return (
       <div className="card" style={{ padding: "1rem", fontSize: "0.95rem" }}>
-        <h3 className="subtitle" style={{ textAlign: 'left', color: '#b91c1c' }}>
+        <h3 className="subtitle" style={{ textAlign: 'center', color: '#b91c1c' }}>
           🚨 At-Risk Agents (Bottom 50% Calls & Availability, Top 50% No Answers)
         </h3>
         {agents.length > 0 ? (
-          <ul style={{ paddingLeft: "1.2rem", color: "#333" }}>
+          <ul style={{ paddingLeft: "1.2rem", color: "#333", textAlign: 'center' }}>
             {agents.map((agent, i) => (
               <li key={i}>
                 {agent.Agent} — 📞 Outbound Calls {agent.OutboundCalls}, 📵 RONA's {agent.NoAnswers}, 🕒 Availability {agent.PercentageAvailable.toFixed(2)}%
@@ -167,8 +170,8 @@ export default function AgentChartsUploader() {
     const availabilityAvg = average(percentData, "PercentageAvailable");
   
     return (
-      <div className="card" style={{ padding: "1rem", fontSize: "0.95rem" }}>
-        <h3 className="subtitle" style={{ textAlign: 'left', color: '#0d9488' }}>
+      <div className="card" style={{ padding: "1rem", fontSize: "0.95rem", textAlign: 'center'}}>
+        <h3 className="subtitle" style={{ textAlign: 'left', color: '#0d9488', textAlign: 'center'}}>
           📈 Agent Metric Averages
         </h3>
         <ul style={{ paddingLeft: "1.2rem" }}>
@@ -229,11 +232,20 @@ export default function AgentChartsUploader() {
             <ResponsiveContainer width="100%" height={400}>
               <BarChart data={callsData}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="Agent" angle={-45} textAnchor="end" interval={0} height={120} />
-                <YAxis />
-                <Tooltip />
+                <XAxis dataKey="Agent" angle={-45} textAnchor="end" interval={0} height={120} tick={{ fill: darkMode ? "#f1f5f9" : "#1f2937" }}
+                />
+                <YAxis tick={{ fill: darkMode ? "#f1f5f9" : "#1f2937" }}/>
+                <Tooltip 
+                contentStyle={{
+                  backgroundColor: darkMode ? "#1e293b" : "#ffffff",
+                  borderColor: darkMode ? "#334155" : "#ccc",
+                  color: darkMode ? "#f1f5f9" : "#1f2937"
+                }}
+                labelStyle={{
+                  color: darkMode ? "#facc15" : "#4b5563"
+                }}/>
                 <Bar dataKey="OutboundCalls" fill="#6366f1">
-                  <LabelList dataKey="OutboundCalls" position="top" />
+                  <LabelList dataKey="OutboundCalls" position="top" style={labelStyle} />
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
@@ -246,11 +258,21 @@ export default function AgentChartsUploader() {
             <ResponsiveContainer width="100%" height={400}>
               <BarChart data={noAnswerData}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="Agent" angle={-45} textAnchor="end" interval={0} height={120} />
-                <YAxis />
-                <Tooltip />
+                <XAxis dataKey="Agent" angle={-45} textAnchor="end" interval={0} height={120} tick={{ fill: darkMode ? "#f1f5f9" : "#1f2937" }}
+                />
+                <YAxis tick={{ fill: darkMode ? "#f1f5f9" : "#1f2937" }}/>
+                <Tooltip 
+                contentStyle={{
+                  backgroundColor: darkMode ? "#1e293b" : "#ffffff",
+                  borderColor: darkMode ? "#334155" : "#ccc",
+                  color: darkMode ? "#f1f5f9" : "#1f2937"
+                }}
+                labelStyle={{
+                  color: darkMode ? "#facc15" : "#4b5563"
+                }}
+                />
                 <Bar dataKey="NoAnswers" fill="#f97316">
-                  <LabelList dataKey="NoAnswers" position="top" />
+                  <LabelList dataKey="NoAnswers" position="top" style={labelStyle}/>
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
@@ -263,15 +285,25 @@ export default function AgentChartsUploader() {
             <ResponsiveContainer width="100%" height={400}>
               <BarChart data={percentData} barCategoryGap="2%">
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="Agent" angle={-45} textAnchor="end" interval={0} height={120} />
-                <YAxis />
-                <Tooltip formatter={(value) => `${value.toFixed(2)}%`} />
+                <XAxis dataKey="Agent" angle={-45} textAnchor="end" interval={0} height={120} tick={{ fill: darkMode ? "#f1f5f9" : "#1f2937" }}
+                />
+                <YAxis tick={{ fill: darkMode ? "#f1f5f9" : "#1f2937" }}/>
+                <Tooltip 
+                contentStyle={{
+                  backgroundColor: darkMode ? "#1e293b" : "#ffffff",
+                  borderColor: darkMode ? "#334155" : "#ccc",
+                  color: darkMode ? "#f1f5f9" : "#1f2937"
+                }}
+                labelStyle={{
+                  color: darkMode ? "#facc15" : "#4b5563"
+                }}
+                formatter={(value) => `${value.toFixed(2)}%`} />
                 <Bar dataKey="PercentageAvailable" fill="#10b981">
                 <LabelList
                 dataKey="PercentageAvailable"
                 position="top"
                 formatter={(v) => `${v.toFixed(1)}%`}
-                style={{ fontSize: 10, fill: '#555' }}
+                style={labelStyle}
               />
                 </Bar>
               </BarChart>
