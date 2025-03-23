@@ -3,11 +3,25 @@ import Papa from "papaparse";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LabelList
 } from "recharts";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 
 export default function AgentChartsUploader() {
   const [callsData, setCallsData] = useState([]);
   const [percentData, setPercentData] = useState([]);
   const [noAnswerData, setNoAnswerData] = useState([]);
+
+  const exportToPDF = () => {
+    const input = document.body; // or use a specific wrapper div
+    html2canvas(input, { scale: 2 }).then((canvas) => {
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF("p", "mm", "a4");
+      const width = pdf.internal.pageSize.getWidth();
+      const height = (canvas.height * width) / canvas.width;
+      pdf.addImage(imgData, "PNG", 0, 0, width, height);
+      pdf.save("agent-report.pdf");
+    });
+  };
 
   const handleUpload = (e) => {
     const file = e.target.files[0];
@@ -122,15 +136,60 @@ export default function AgentChartsUploader() {
     );
   }  
 
+  const renderAgentAverages = () => {
+    if (!callsData.length || !noAnswerData.length || !percentData.length) return null;
+  
+    const average = (arr, key) => {
+      if (!arr.length) return 0;
+      const total = arr.reduce((sum, entry) => sum + (entry[key] || 0), 0);
+      return total / arr.length;
+    };
+  
+    const outboundAvg = average(callsData, "OutboundCalls");
+    const noAnswerAvg = average(noAnswerData, "NoAnswers");
+    const availabilityAvg = average(percentData, "PercentageAvailable");
+  
+    return (
+      <div className="card" style={{ padding: "1rem", fontSize: "0.95rem" }}>
+        <h3 className="subtitle" style={{ textAlign: 'left', color: '#0d9488' }}>
+          📈 Agent Metric Averages
+        </h3>
+        <ul style={{ paddingLeft: "1.2rem" }}>
+          <li>📞 Outbound Calls Avg: <strong>{outboundAvg.toFixed(2)}</strong></li>
+          <li>📵 No Answers Avg: <strong>{noAnswerAvg.toFixed(2)}</strong></li>
+          <li>🕒 Availability Avg: <strong>{availabilityAvg.toFixed(2)}%</strong></li>
+        </ul>
+      </div>
+    );
+  };  
+
   return (
     <div className="container">
       <div className="card">
-        <h1 className="title">📊 Agent Analytics Dashboard</h1>
+        <h1 className="title">📊 Phone Report Analytics Dashboard</h1>
         <p className="subtitle">Upload a CSV file to visualize agent performance statistics.</p>
         <div className="upload-input">
           <input type="file" accept=".csv" onChange={handleUpload} />
         </div>
+        <div className="PDFexport">
+          <button
+            onClick={exportToPDF}
+            style={{
+              padding: "0.5rem 1rem",
+              borderRadius: "6px",
+              marginLeft: "1rem",
+              background: "#2563eb",
+              color: "#fff",
+              border: "none",
+              cursor: "pointer"
+            }}
+          >
+            📄 Export PDF
+          </button>
+        </div>
       </div>
+
+      {renderAgentAverages()}
 
       {callsData.length > 0 && (
         <div className="card">
@@ -234,7 +293,6 @@ export default function AgentChartsUploader() {
       
         return renderLowAgentList(lowAgents);
       })()}      
-
     </div>
   );
 }
