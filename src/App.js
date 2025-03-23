@@ -2,7 +2,7 @@
 import React, { useState,useEffect } from "react";
 import Papa from "papaparse";
 import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LabelList
+  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LabelList
 } from "recharts";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
@@ -231,7 +231,6 @@ export default function AgentChartsUploader() {
             <h2 className="subtitle">🔊 Outbound Calls by Agent</h2>
             <ResponsiveContainer width="100%" height={400}>
               <BarChart data={callsData}>
-                <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="Agent" angle={-45} textAnchor="end" interval={0} height={120} tick={{ fill: darkMode ? "#f1f5f9" : "#1f2937" }}
                 />
                 <YAxis tick={{ fill: darkMode ? "#f1f5f9" : "#1f2937" }}/>
@@ -257,7 +256,6 @@ export default function AgentChartsUploader() {
             <h2 className="subtitle">📵 No Answers by Agent</h2>
             <ResponsiveContainer width="100%" height={400}>
               <BarChart data={noAnswerData}>
-                <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="Agent" angle={-45} textAnchor="end" interval={0} height={120} tick={{ fill: darkMode ? "#f1f5f9" : "#1f2937" }}
                 />
                 <YAxis tick={{ fill: darkMode ? "#f1f5f9" : "#1f2937" }}/>
@@ -284,7 +282,6 @@ export default function AgentChartsUploader() {
             <h2 className="subtitle">🕒 Percentage Available by Agent</h2>
             <ResponsiveContainer width="100%" height={400}>
               <BarChart data={percentData} barCategoryGap="2%">
-                <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="Agent" angle={-45} textAnchor="end" interval={0} height={120} tick={{ fill: darkMode ? "#f1f5f9" : "#1f2937" }}
                 />
                 <YAxis tick={{ fill: darkMode ? "#f1f5f9" : "#1f2937" }}/>
