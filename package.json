@@ -1,0 +1,30 @@
+{
+  "name": "phone-report-analyzer",
+  "version": "0.1.0",
+  "private": true,
+  "homepage": "https://abalcs.github.io/phone-report-analyzer",
+  "dependencies": {
+    "docx": "^9.5.1",
+    "file-saver": "^2.0.5",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^3.0.1",
+    "papaparse": "^5.5.2",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "recharts": "^2.15.1",
+    "xlsx": "^0.18.5"
+  },
+  "scripts": {
+    "start": "vite",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "predeploy": "npm run build",
+    "deploy": "npx gh-pages -d build"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.0",
+    "gh-pages": "^6.1.1",
+    "vite": "^5.4.0"
+  }
+}
